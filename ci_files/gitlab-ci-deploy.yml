@@ -1,0 +1,36 @@
+default:
+    image: python:3.9
+    before_script:
+        - apt-get update
+        - apt-get install -y python3-pip
+        - pip install -r requirements.txt
+
+variables:
+  DOCKER_DRIVER: overlay2
+
+stages:
+    - test
+    - build
+    - deploy
+
+test:
+    script:
+        - coverage run -m pytest
+        - coverage report
+
+build_image:
+  image: docker:latest
+  stage: build
+  services:
+    - docker:dind
+  before_script:
+    - docker login registry.gitlab.com -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD
+  script:
+    - docker build -t $CI_REGISTRY_IMAGE:latest .
+    - docker push $CI_REGISTRY_IMAGE:latest
+
+deploy_image:
+  stage: deploy
+  script:
+    - echo "terraform plan"
+    - echo "terraform apply"

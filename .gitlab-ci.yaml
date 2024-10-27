@@ -1,0 +1,28 @@
+default:
+    image: python:3.9
+    before_script:
+        - apt-get update
+        - apt-get install -y python3-pip
+        - pip install -r requirements.txt
+
+variables:
+  DOCKER_DRIVER: overlay2
+
+stages:
+    - test
+    - build
+    - deploy
+
+test:
+    script:
+        - echo "Unit Test Stage Here"
+
+build_image:
+  stage: build
+  script:
+    - echo "Build Stage Here"
+
+deploy_image:
+  stage: deploy
+  script:
+    - echo "Deploy Stage Here"
