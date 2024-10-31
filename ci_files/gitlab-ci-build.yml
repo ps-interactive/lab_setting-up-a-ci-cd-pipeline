@@ -1,0 +1,16 @@
+image: ubuntu/apache2
+
+stages:
+  - build
+
+variables:
+  WEBROOT: /var/www/html
+  APACHE_CONF_DIR: /etc/apache2/sites-available/
+
+build:
+  stage: build
+  script:
+    - mkdir -p ${WEBROOT}
+    - cp index.html ${WEBROOT}/index.html
+    - cp style.css ${WEBROOT}/style.css
+    - echo "DocumentRoot ${WEBROOT}" >> ${APACHE_CONF_DIR}/000-default.conf
